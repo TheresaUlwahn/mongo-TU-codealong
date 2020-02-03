@@ -24,8 +24,7 @@ if (process.env.RESET_DATABASE) {
 
   const seedDatabase = async () => {
     await Author.deleteMany()
-
-
+    await Book.deleteMany()
 
     const tolkien = new Author({ name: 'J.R.R Tolkien'})
     await tolkien.save()
