@@ -25,6 +25,8 @@ if (process.env.RESET_DATABASE) {
   const seedDatabase = async () => {
     await Author.deleteMany()
 
+
+
     const tolkien = new Author({ name: 'J.R.R Tolkien'})
     await tolkien.save()
 
@@ -64,6 +66,30 @@ app.get('/authors', async (req, res) => {
   const authors = await Author.find()
   res.json(authors)
 })
+
+app.get('/authors/:id', async (req, res) => {
+  const author = await Author.findById(req.params.id)
+  if (author) {
+    res.json(author)
+  } else {
+    res.status(404).json({ error:' Author not found '})
+  }
+})
+
+app.get('/authors/:id/books', async (req, res) => {
+  const author = await Author.findById(req.params.id)
+  if (author) {
+    const books = await Book.find({ author: mongoose.Types.ObjectId(author.id)})
+    res.json(books)
+  } else {
+    res.status(404).json({ error:' Author not found '})
+  }
+})
+
+app.get('/books', async (req, res) => {
+  const books = await Book.find().populate('author')
+  res.json(books)
+}) 
 
 // Start the server
 app.listen(port, () => {
