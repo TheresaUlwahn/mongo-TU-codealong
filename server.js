@@ -12,7 +12,7 @@ const Author = mongoose.model('Author', {
 })
 
 const Book = mongoose.model('Book', {
-  title: String, 
+  title: String,
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Author'
@@ -26,10 +26,10 @@ if (process.env.RESET_DATABASE) {
     await Author.deleteMany()
     await Book.deleteMany()
 
-    const tolkien = new Author({ name: 'J.R.R Tolkien'})
+    const tolkien = new Author({ name: 'J.R.R Tolkien' })
     await tolkien.save()
 
-    const rowling = new Author({ name: 'J.K Rowling'})
+    const rowling = new Author({ name: 'J.K. Rowling' })
     await rowling.save()
 
     await new Book({ title: "Harry Potter and the Philosopher's Stone", author: rowling }).save()
@@ -58,7 +58,7 @@ app.use(bodyParser.json())
 
 // Start defining your routes here
 app.get('/', (req, res) => {
-  res.send('Hello world, R U there?')
+  res.send('Hello world')
 })
 
 app.get('/authors', async (req, res) => {
@@ -71,24 +71,24 @@ app.get('/authors/:id', async (req, res) => {
   if (author) {
     res.json(author)
   } else {
-    res.status(404).json({ error:' Author not found '})
+    res.status(404).json({ error: 'Author not found' })
   }
 })
 
 app.get('/authors/:id/books', async (req, res) => {
   const author = await Author.findById(req.params.id)
   if (author) {
-    const books = await Book.find({ author: mongoose.Types.ObjectId(author.id)})
+    const books = await Book.find({ author: mongoose.Types.ObjectId(author.id) })
     res.json(books)
   } else {
-    res.status(404).json({ error:' Author not found '})
+    res.status(404).json({ error: 'Author not found' })
   }
 })
 
 app.get('/books', async (req, res) => {
   const books = await Book.find().populate('author')
   res.json(books)
-}) 
+})
 
 // Start the server
 app.listen(port, () => {
